@@ -31,8 +31,8 @@ def compare_hash_values(folder1, folder2):
   Returns:
     True if the hash values of the two folders are identical, False otherwise.
   """
-  hash_values1 = get_hash_values(folder1)
-  hash_values2 = get_hash_values(folder2)
+  hash_values1 = get_hash_value(folder1)
+  hash_values2 = get_hash_value(folder2)
   if hash_values1 == hash_values2:
     return True
   else:
