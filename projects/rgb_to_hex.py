@@ -1,19 +1,14 @@
+# converts rgb 0-255, 0-255, 0-255 to hex ######
+
+def limit_value(number):
+    if number < 0:
+        return 0
+    if number > 255:
+        return 255
+    return number
+
 def rgb(r, g, b):
-    if r or g or b < 0:
-        if r < 0:
-            r = 0
-        if g < 0:
-            g = 0
-        if b < 0:
-            b = 0
-    
-    if r or g or b > 255:
-        if r > 255:
-            r = 255
-        if g > 255:
-            g = 255
-        if b > 255:
-            b = 255
+    r, g, b = limit_value(r), limit_value(g), limit_value(b)
             
     hr, hg, hb = hex(r), hex(g), hex(b)
     hr, hg, hb = hr.split("x"), hg.split("x"), hb.split("x")
