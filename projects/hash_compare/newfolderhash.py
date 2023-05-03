@@ -4,8 +4,8 @@ import logging
 import time
 
 # define the paths of the two network folders to compare
-folder1_path = r""
-folder2_path = r""
+folder1_path = r"\\PoesNAS\\Plex Library\\Testing"
+folder2_path = r"\\CatNAS\\Plex Library\\Testing"
 
 # text markup
 class bcolors:
