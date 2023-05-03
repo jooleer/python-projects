@@ -2,7 +2,6 @@ import os
 import hashlib
 import logging
 import time
-import settings as s
 
 # define the paths of the two network folders to compare
 folder1_path = r""
