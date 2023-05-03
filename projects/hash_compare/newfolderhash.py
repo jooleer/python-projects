@@ -94,8 +94,10 @@ for relative_path in set(folder1_hashes.keys()).intersection(set(folder2_hashes.
         logging.info("[OK]: " + relative_path)
         files_completed += 1
 
+# end time
 end = time.time()
 
+# process output information
 print("\nProcess finished in {:.2f}".format(round((end - start), 2)) + " seconds")
 print(f"Processed {files_amount} file(s): "
 + bcolors.OKGREEN + f"\n{files_completed} file(s) OK" + bcolors.ENDC
