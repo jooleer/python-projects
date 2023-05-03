@@ -1,5 +1,6 @@
 import os
 import hashlib
+import time
 
 # text markup
 class bcolors:
