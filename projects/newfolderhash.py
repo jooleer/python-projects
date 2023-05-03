@@ -30,8 +30,8 @@ files_errors = 0
 files_missing = 0
 
 # define the paths of the two network folders to compare
-folder1_path = r"\\PoesNAS\\Plex Library\\Series NL\\Alloo Bij\\Season 1"
-folder2_path = r"\\CatNAS\\Plex Library\\Series NL\\Alloo Bij\\Season 1"
+folder1_path = r""
+folder2_path = r""
 
 # function to generate the hash value of a file
 def generate_file_hash(file_path):
@@ -44,7 +44,7 @@ def generate_file_hash(file_path):
 def get_all_files(folder_path):
     global files_amount
     all_files = []
-    for root, dirs, files in os.walk(folder_path):
+    for root, files in os.walk(folder_path):
         for filename in files:
             file_path = os.path.join(root, filename)
             all_files.append(file_path)

@@ -15,8 +15,8 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 # define the paths of the two network folders to compare
-folder1_path = r"\\PoesNAS\\Plex Library\\Testing"
-folder2_path = r"\\CatNAS\\Plex Library\\Testing"
+folder1_path = r""
+folder2_path = r""
 
 # function to generate the hash value of a file
 def generate_file_hash(file_path):
