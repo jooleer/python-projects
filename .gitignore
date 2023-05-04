@@ -1,5 +1,6 @@
 headers/
 *.c
 *.txt
-projects/logs/
+logs/
 .vscode/
+folderhash.py
