@@ -1,11 +1,17 @@
 import os
+import sys
 import hashlib
+import subprocess
+import zlib
 import logging
 import time
 
 # define the paths of the two network folders to compare
-folder1_path = r"\\PoesNAS\\Plex Library\\Testing"
-folder2_path = r"\\CatNAS\\Plex Library\\Testing"
+folder1_path = r""
+folder2_path = r""
+
+# hash algorythm (CRC32, MD5, SHA256)
+hash_algorithm = "CRC32"
 
 # text markup
 class bcolors:
@@ -32,19 +38,33 @@ files_amount = 0
 files_completed = 0
 files_errors = 0
 files_missing = 0
+files = 0
 
-# function to generate the hash value of a file
-def generate_file_hash(file_path):
+
+#generate hash value of file
+def generate_file_hash(file_path, hash_algorithm="CRC32"):
     with open(file_path, "rb") as f:
+        global files
+        files += 1
+        sys.stdout.write("Processing file %d of %d (%d%%)\r\n\033[K" % (files, files_amount, (files/files_amount)*100) )
+        sys.stdout.write("Generating hash for file: %s\r\033[F" % (file_path) )
+        sys.stdout.flush()
         file_data = f.read()
-        file_hash = hashlib.md5(file_data).hexdigest() #test w/ sha256 / md5
+        if hash_algorithm == "CRC32":
+            file_hash = zlib.crc32(file_data)
+        elif hash_algorithm == "MD5":
+            file_hash = hashlib.md5(file_data).hexdigest()
+        elif hash_algorithm == "SHA256":
+            file_hash = hashlib.sha256(file_data).hexdigest()
+
         return file_hash
+
 
 # function to recursively get a list of all files in a folder and its subfolders
 def get_all_files(folder_path):
     global files_amount
     all_files = []
-    for root, files in os.walk(folder_path):
+    for root, dirs, files in os.walk(folder_path):
         for filename in files:
             file_path = os.path.join(root, filename)
             all_files.append(file_path)
@@ -55,14 +75,14 @@ def get_all_files(folder_path):
 # generate hash values for each file in folder 1
 folder1_hashes = {}
 for file_path in get_all_files(folder1_path):
-    file_hash = generate_file_hash(file_path)
+    file_hash = generate_file_hash(file_path, hash_algorithm)
     relative_path = os.path.relpath(file_path, folder1_path)
     folder1_hashes[relative_path] = file_hash
 
 # generate hash values for each file in folder 2
 folder2_hashes = {}
 for file_path in get_all_files(folder2_path):
-    file_hash = generate_file_hash(file_path)
+    file_hash = generate_file_hash(file_path, hash_algorithm)
     relative_path = os.path.relpath(file_path, folder2_path)
     folder2_hashes[relative_path] = file_hash
 
@@ -86,12 +106,12 @@ for file_path in get_all_files(folder1_path):
 # compare the hash values for each file in both folders
 for relative_path in set(folder1_hashes.keys()).intersection(set(folder2_hashes.keys())):
     if folder1_hashes[relative_path] != folder2_hashes[relative_path]:
-        print(bcolors.FAIL + f"Hash values for {relative_path} do not match." + bcolors.ENDC)
-        logging.error("[ERROR - NO MATCH]: " + relative_path)
+        # print(bcolors.FAIL + f"Hash values for {relative_path} do not match." + bcolors.ENDC)
+        logging.error(f"[ERROR - NO MATCH]: {relative_path}")
         files_errors += 1
     else:
-        print(bcolors.OKGREEN + f"Hash values for {relative_path} match." + bcolors.ENDC)
-        logging.info("[OK]: " + relative_path)
+        # print(bcolors.OKGREEN + f"Hash values for {relative_path} match." + bcolors.ENDC)
+        logging.info(f"[OK]: {relative_path}")
         files_completed += 1
 
 # end time
