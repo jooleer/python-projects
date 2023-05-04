@@ -92,14 +92,16 @@ for file_path in get_all_files(folder2_path):
 for file_path in get_all_files(folder2_path):
     relative_path = os.path.relpath(file_path, folder2_path)
     if relative_path not in folder1_hashes:
-        print(bcolors.WARNING + f"{relative_path} is missing from {folder1_path}." + bcolors.ENDC)
+        # print(bcolors.WARNING + f"{relative_path} is missing from {folder1_path}." + bcolors.ENDC)
+        logging.info(f"[WARNING - MISSING FILE]: {relative_path}")
         files_missing += 1
 
 # check for missing files in folder 2
 for file_path in get_all_files(folder1_path):
     relative_path = os.path.relpath(file_path, folder1_path)
     if relative_path not in folder2_hashes:
-        print(bcolors.WARNING + f"{relative_path} is missing from {folder2_path}." + bcolors.ENDC)
+        # print(bcolors.WARNING + f"{relative_path} is missing from {folder2_path}." + bcolors.ENDC)
+        logging.info(f"[WARNING - MISSING FILE]: {relative_path}")
         files_missing += 1
 
 
@@ -107,7 +109,7 @@ for file_path in get_all_files(folder1_path):
 for relative_path in set(folder1_hashes.keys()).intersection(set(folder2_hashes.keys())):
     if folder1_hashes[relative_path] != folder2_hashes[relative_path]:
         # print(bcolors.FAIL + f"Hash values for {relative_path} do not match." + bcolors.ENDC)
-        logging.error(f"[ERROR - NO MATCH]: {relative_path}")
+        logging.error(f"[FILE HASH ERROR]: {relative_path}")
         files_errors += 1
     else:
         # print(bcolors.OKGREEN + f"Hash values for {relative_path} match." + bcolors.ENDC)
