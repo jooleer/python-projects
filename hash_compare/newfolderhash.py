@@ -13,7 +13,6 @@ import threading
 folder1_path = r""
 folder2_path = r""
 
-
 # hash algorythm (CRC32, MD5, SHA256)
 hash_algorithm = "CRC32"
 
@@ -44,7 +43,6 @@ files_errors = 0
 files_missing = 0
 files = 0
 
-
 #generate hash value of file
 def generate_file_hash(file_path, hash_algorithm="CRC32"):
     with open(file_path, "rb") as f:
@@ -63,7 +61,6 @@ def generate_file_hash(file_path, hash_algorithm="CRC32"):
 
         return file_hash
 
-
 # function to recursively get a list of all files in a folder and its subfolders
 def get_all_files(folder_path):
     global files_amount
@@ -75,7 +72,6 @@ def get_all_files(folder_path):
             files_amount += 1
     return all_files
 
-
 def folder_generate_hashes(folder_path):
     # generate hash values for each file in folder
     folder_hashes = {}
@@ -85,7 +81,6 @@ def folder_generate_hashes(folder_path):
         folder_hashes[relative_path] = file_hash
         # print(f"Done: {relative_path}")
     return folder_hashes
-
 
 folder1_hashes = {}
 folder2_hashes = {}
@@ -97,19 +92,21 @@ def gen_folder1_hashes(folder_path=folder1_path):
 def gen_folder2_hashes(folder_path=folder2_path):
     global folder2_hashes
     folder2_hashes = folder_generate_hashes(folder_path)
-    
 
+# multithreading 
+# make 2 threads, one for each folder path
 t1 = threading.Thread(target=gen_folder1_hashes, args=(folder1_path,))
 t2 = threading.Thread(target=gen_folder2_hashes, args=(folder2_path,))
 
+# start each job 
 t1.start()
 t2.start()
 
+# wait for both jobs to be finished before continuing 
 t1.join()
 t2.join()
 
-
-''' 
+''' currently disabled missing files checking
 # check for missing files in folder 1
 for file_path in get_all_files(folder2_path):
     relative_path = os.path.relpath(file_path, folder2_path)
